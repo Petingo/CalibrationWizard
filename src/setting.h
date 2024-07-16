@@ -132,11 +132,11 @@ public:
         }
         
         flag = 0;
-        if(calibFixPrincipalPoint) flag |= CV_CALIB_FIX_PRINCIPAL_POINT;
-        if(calibZeroTangentDist)   flag |= CV_CALIB_ZERO_TANGENT_DIST;
-        if(aspectRatio)            flag |= CV_CALIB_FIX_ASPECT_RATIO;
-        if(calibZerok1Dist)        flag |= CV_CALIB_FIX_K1;
-        if(calibZerok2Dist)        flag |= CV_CALIB_FIX_K2;
+        if(calibFixPrincipalPoint) flag |= cv::CALIB_FIX_PRINCIPAL_POINT;
+        if(calibZeroTangentDist)   flag |= cv::CALIB_ZERO_TANGENT_DIST;
+        if(aspectRatio)            flag |= cv::CALIB_FIX_ASPECT_RATIO;
+        if(calibZerok1Dist)        flag |= cv::CALIB_FIX_K1;
+        if(calibZerok2Dist)        flag |= cv::CALIB_FIX_K2;
         
         
         
@@ -162,7 +162,7 @@ public:
             view0.copyTo(result);
         }
         else if( atImageList < (int)imageList.size() )
-            result = imread(imageList[atImageList++], CV_LOAD_IMAGE_COLOR);
+            result = imread(imageList[atImageList++], IMREAD_COLOR);
         
         return result;
     }

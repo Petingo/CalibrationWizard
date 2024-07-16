@@ -76,7 +76,7 @@ void Calib::cameraCalib()
         {
             case Settings::CHESSBOARD:
                 found = findChessboardCorners( view, s.boardSize, pointBuf,
-                                              CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_FAST_CHECK | CV_CALIB_CB_NORMALIZE_IMAGE);
+                                              cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_FAST_CHECK | cv::CALIB_CB_NORMALIZE_IMAGE);
                 break;
             case Settings::CIRCLES_GRID:
                 found = findCirclesGrid( view, s.boardSize, pointBuf );
@@ -97,7 +97,7 @@ void Calib::cameraCalib()
                 Mat viewGray;
                 cvtColor(view, viewGray, COLOR_BGR2GRAY);
                 cornerSubPix( viewGray, pointBuf, Size(11,11),
-                             Size(-1,-1), TermCriteria( CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 30, 0.1 ));
+                             Size(-1,-1), TermCriteria( cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1 ));
             }
             
             if( mode == CAPTURING &&  // For camera only take new samples after delay time
@@ -208,7 +208,7 @@ bool Calib::runCalibration( Settings& s, Size& imageSize, Mat& cameraMatrix, Mat
 {
     
     cameraMatrix = Mat::eye(3, 3, CV_64F);
-    if( s.flag & CV_CALIB_FIX_ASPECT_RATIO )
+    if( s.flag & cv::CALIB_FIX_ASPECT_RATIO )
         cameraMatrix.at<double>(0,0) = 1.0;
     
     
@@ -220,7 +220,7 @@ bool Calib::runCalibration( Settings& s, Size& imageSize, Mat& cameraMatrix, Mat
     bool ok;
     
     double rms = calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix,
-                                 distCoeffs, rvecs, tvecs, s.flag|CV_CALIB_FIX_K3|CV_CALIB_FIX_K4|CV_CALIB_FIX_K5);
+                                 distCoeffs, rvecs, tvecs, s.flag|cv::CALIB_FIX_K3|cv::CALIB_FIX_K4|cv::CALIB_FIX_K5);
     
     
     cout << "Re-projection error reported by calibrateCamera: "<< rms << endl;
@@ -249,7 +249,7 @@ double Calib::computeReprojectionErrors( const vector<vector<Point3f> >& objectP
     {
         projectPoints( Mat(objectPoints[i]), rvecs[i], tvecs[i], cameraMatrix,
                       distCoeffs, imagePoints2);
-        err = norm(Mat(imagePoints[i]), Mat(imagePoints2), CV_L2);
+        err = norm(Mat(imagePoints[i]), Mat(imagePoints2), cv::NORM_L2);
         
         int n = (int)objectPoints[i].size();
         perViewErrors[i] = (float) std::sqrt(err*err/n);
@@ -327,17 +327,17 @@ void Calib::saveCameraParams( Settings& s, Size& imageSize, Mat& cameraMatrix, M
     fs << "k1_Dist" << s.calibZerok1Dist;
     fs << "k2_Dist" << s.calibZerok2Dist;
     
-    if( s.flag & CV_CALIB_FIX_ASPECT_RATIO )
+    if( s.flag & cv::CALIB_FIX_ASPECT_RATIO )
         fs << "FixAspectRatio" << s.aspectRatio;
     
     if( s.flag )
     {
         sprintf( buf, "flags: %s%s%s%s",
-                s.flag & CV_CALIB_USE_INTRINSIC_GUESS ? " +use_intrinsic_guess" : "",
-                s.flag & CV_CALIB_FIX_ASPECT_RATIO ? " +fix_aspectRatio" : "",
-                s.flag & CV_CALIB_FIX_PRINCIPAL_POINT ? " +fix_principal_point" : "",
-                s.flag & CV_CALIB_ZERO_TANGENT_DIST ? " +zero_tangent_dist" : "" );
-        cvWriteComment( *fs, buf, 0 );
+                s.flag & cv::CALIB_USE_INTRINSIC_GUESS ? " +use_intrinsic_guess" : "",
+                s.flag & cv::CALIB_FIX_ASPECT_RATIO ? " +fix_aspectRatio" : "",
+                s.flag & cv::CALIB_FIX_PRINCIPAL_POINT ? " +fix_principal_point" : "",
+                s.flag & cv::CALIB_ZERO_TANGENT_DIST ? " +zero_tangent_dist" : "" );
+       fs.writeComment( buf, 0 );
         
     }
     
@@ -377,7 +377,7 @@ void Calib::saveCameraParams( Settings& s, Size& imageSize, Mat& cameraMatrix, M
         txt_rotationMat.close();
         txt_tVec.close();
         
-        cvWriteComment( *fs, "a set of 6-tuples (rotation vector + translation vector) for each view", 0 );
+        fs.writeComment( "a set of 6-tuples (rotation vector + translation vector) for each view", 0 );
         fs << "Extrinsic_Parameters" << bigmat;
         
     }
