@@ -1,3 +1,7 @@
+# Modification in fork
+- Update the old flag & function in opencv2.x to opencv4.x
+- Update `CMakeLists.txt` for M1
+
 # Calibration Wizard
 [**Paper**](http://openaccess.thecvf.com/content_ICCV_2019/papers/Peng_Calibration_Wizard_A_Guidance_System_for_Camera_Calibration_Based_on_ICCV_2019_paper.pdf) | [**Video**](https://www.youtube.com/watch?v=my3jocjpD0U&feature=youtu.be&t=398) <br>
 <img src="https://pengsongyou.github.io/media/wizard0.jpg" width="270"/> <img src="https://pengsongyou.github.io/media/wizard1.jpg" width="270"/> <img src="https://pengsongyou.github.io/media/wizard2.jpg" width="270"/>
